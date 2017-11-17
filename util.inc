@@ -333,7 +333,7 @@ function get_school_select($n,$school) {
   $rv.="<option value=\"\"> - Select -\n";
   foreach ($schools as $s) {
     $rv.="<option value=\"$s\" ";
-    if ($s==$school || ($s=="OTHER" && !in_array($school,$schools))) {
+    if ($s==$school || ($s=="OTHER" && !in_array($school,$schools)) && $school != '') {
       $rv.="SELECTED";
     }
     $rv.=">".$s."\n";
