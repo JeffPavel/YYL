@@ -2,9 +2,9 @@
 Script: ajax.js
 */
 
-var $url="http://www.bestworldcoins.com/yyl/ajax.php";
-var $home="http://www.bestworldcoins.com/yyl/index.php";
-var $add="http://www.bestworldcoins.com/yyl/add_player.php";
+var $url="ajax.php";
+var $home="index.php";
+var $add="add_player.php";
 
 function checkuser (email) {
 	var myAjax = new Ajax ($url, {
