@@ -103,7 +103,12 @@ input[disabled] {
 }
 .note4 {
     font-size:12px;
-    color: WHITE;
+    color: #AAAAAA;
+}
+.note6 {
+  margin-left: 15px; 
+  padding-left: 5px; 
+  border-left: 1px yellow dashed;
 }
 .note5 {
     font-size: 12px;

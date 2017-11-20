@@ -194,7 +194,8 @@ function player_form($n,$player,$hidden,$nb) {
   print "<TD rowspan = 2 width=200 style=\"border-left: 2px dashed yellow; padding-left: 5px; margin-left: 5px; color: #AAAAAA\"> If the grade for your child is not available, please put your child on the waiting list by clicking ";
   print "<A style=\"color: #FFFF99;\" HREF=\"https://docs.google.com/spreadsheet/viewform?formkey=dEhqcEFNdnJmYkxCSHl3VHRSWlAtcVE6MQ\" target=_blank> here </A>";
   print "<TR>";
-  print "<TD> <span class=required> Age: </span> <INPUT TYPE=\"text\" size=3 maxlength=3 onBlur=\"clearMe(this)\" name=\"page";
+  print "<TD> <span class=required> Age: </span> ";
+  print "<INPUT TYPE=\"text\" size=3 maxlength=3 onBlur=\"clearMe(this)\" name=\"page";
   print $n;
   print "\" value=\"".$player['age']."\"> &nbsp;";
 
@@ -222,6 +223,14 @@ function player_form($n,$player,$hidden,$nb) {
   print "<span class=required> Shirt Size: </span> ";
   print get_shirt_select($n,$player['shirt']);
 
+  print "<TR><TD align=right>";
+  print "Growth Priority: <TD> ";
+  print "<INPUT TYPE=\"text\" size=15 onBlur=\"clearMe(this)\" name=\"pgrowth";
+  print $n;
+  print "\" value=\"".$player['growth']."\"> &nbsp;";
+
+  print "<TD> <span class=\"note4\"> &larr; What can YYL do to help your child grow?</span>";
+
   print "<TR><TD>";
   print "<input type=checkbox id=bagchk".$n;
   print " onClick=\"baglogic(document.getElementById('bagchk".$n."'),document.getElementById('newbagradiodiv".$n."'),document.getElementById('newbagtextdiv".$n."'),$n)\" name=preturning_player";
@@ -236,7 +245,7 @@ function player_form($n,$player,$hidden,$nb) {
 #    print " CHECKED";
 #  }
 #  print "> 2009 player";
-  print "<TD> <div id=newbagradiodiv".$n."> New Bag: ";
+  print "<TD colspan=2> <div id=newbagradiodiv".$n."> New Bag: ";
   print "<input type=radio id=pnew_bag".$n." name=pnew_bag";
   print $n;
   if ($player['new_bag']==0) {
@@ -249,8 +258,8 @@ function player_form($n,$player,$hidden,$nb) {
     print " CHECKED";
   }
   print " value=1> Yes";
-  print "<BR> <span class=note> $".$nb." to purchase a league bag </span></div>";
-  print "<div style=\"display:none;\"id=newbagtextdiv".$n."><span class=note> New bag is free for new players.</span></div>";
+  print "<span class=\"note4 note6\"> $".$nb." to purchase a league bag </span></div>";
+  print "<div style=\"display:none;\"id=newbagtextdiv".$n."><span class=\"note4 note6\"> New bag is free for new players.</span></div>";
   if ($player['id']) {
     print "<input type=\"hidden\" name=\"pid";
     print $n;
@@ -547,6 +556,7 @@ function update_reg($ar) {
     $psex[$i] = $ar['psex'.$i];
     $pnew_bag[$i] = $ar['pnew_bag'.$i];
     $pshirt[$i] = $ar['pshirt'.$i];
+    $pgrowth[$i] = $ar['pgrowth'.$i];
     if ($ar['preturning_player'.$i] == "on") {
       $rp[$i] = 1;
     } else {
@@ -573,11 +583,11 @@ function update_reg($ar) {
       $query = " update players set ";
       $query.="name=\"$pname[$i]\",age=\"$page[$i]\",school=\"$pschool[$i]\", ";
       $query.=" grade=\"$pgrade[$i]\",gender=\"$psex[$i]\",shirt=\"$pshirt[$i]\", ";
-      $query.=" new_bag=\"$pnew_bag[$i]\",returning_player=$rp[$i],ret_player_2=$rp2[$i]";
+      $query.=" new_bag=\"$pnew_bag[$i]\",returning_player=$rp[$i],ret_player_2=$rp2[$i],growth=\"$pgrowth[$i]\"";
       $query.=" where id=$pid[$i]";
     } else {
-      $query = "insert into players (id, user_id, name, school, age, grade, shirt, returning_player, ret_player_2, gender, new_bag) values (";
-      $query.="NULL,$id,\"$pname[$i]\",\"$pschool[$i]\",$page[$i], $pgrade[$i], $pshirt[$i],$rp[$i],$rp2[$i],\"$psex[$i]\",$pnew_bag[$i]);";
+      $query = "insert into players (id, user_id, name, school, age, grade, shirt, returning_player, ret_player_2, gender, new_bag, growth) values (";
+      $query.="NULL,$id,\"$pname[$i]\",\"$pschool[$i]\",$page[$i], $pgrade[$i], $pshirt[$i],$rp[$i],$rp2[$i],\"$psex[$i]\",$pnew_bag[$i],\"$pgrowth[$i]\");";
     }
 #    print "query=[$query]<BR><BR>";
     mysql_query($query);
@@ -622,6 +632,7 @@ function add_player($ar) {
     $psex[$i] = $ar['psex'.$i];
     $pnew_bag[$i] = $ar['pnew_bag'.$i];
     $pshirt[$i] = $ar['pshirt'.$i];
+    $pgrowth[$i] = $ar['pgrowth'.$i];
     if ($ar['preturning_player'.$i] == "on") {
       $rp[$i] = 1;
     } else {
@@ -641,8 +652,8 @@ function add_player($ar) {
 
   for ($i=1;$i<=$num_players;$i++) {
 
-    $query = "insert into players (id, user_id, name, school, age, grade, shirt, returning_player, ret_player_2, gender, new_bag) values (";
-    $query.="NULL,$userid,\"$pname[$i]\",\"$pschool[$i]\",$page[$i], $pgrade[$i], $pshirt[$i],$rp[$i],$rp2[$i],\"$psex[$i]\",$pnew_bag[$i]);";
+    $query = "insert into players (id, user_id, name, school, age, grade, shirt, returning_player, ret_player_2, gender, new_bag, growth) values (";
+    $query.="NULL,$userid,\"$pname[$i]\",\"$pschool[$i]\",$page[$i], $pgrade[$i], $pshirt[$i],$rp[$i],$rp2[$i],\"$psex[$i]\",$pnew_bag[$i],\"$pgrowth[$i]\");";
 #    print "[".$query."]";
     mysql_query($query);
   }
@@ -680,6 +691,7 @@ function register_user($ar) {
     $psex[$i] = $ar['psex'.$i];
     $pnew_bag[$i] = $ar['pnew_bag'.$i];
     $pshirt[$i] = $ar['pshirt'.$i];
+    $pgrowth[$i] = $ar['pgrowth'.$i];
     if ($ar['preturning_player'.$i] == "on") {
       $rp[$i] = 1;
     } else {
@@ -699,8 +711,8 @@ function register_user($ar) {
   $userid=mysql_insert_id();
   for ($i=1;$i<=$num_players;$i++) {
 
-    $query = "insert into players (id, user_id, name, school, age, grade, shirt, returning_player, ret_player_2, gender, new_bag) values (";
-    $query.="NULL,$userid,\"$pname[$i]\",\"$pschool[$i]\",$page[$i], $pgrade[$i], $pshirt[$i],$rp[$i],$rp2[$i],\"$psex[$i]\",$pnew_bag[$i]);";
+    $query = "insert into players (id, user_id, name, school, age, grade, shirt, returning_player, ret_player_2, gender, new_bag, growth) values (";
+    $query.="NULL,$userid,\"$pname[$i]\",\"$pschool[$i]\",$page[$i], $pgrade[$i], $pshirt[$i],$rp[$i],$rp2[$i],\"$psex[$i]\",$pnew_bag[$i],\"$pgrowth[$i]\");";
 #    print "[".$query."]";
     mysql_query($query);
   }
