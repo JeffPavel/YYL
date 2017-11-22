@@ -114,6 +114,9 @@ input[disabled] {
     font-size: 12px;
     color: white;
 }
+.nowrap {
+    white-space: nowrap;
+}
 #text {
     border: 1px #FFFF99 solid;
 }
@@ -248,7 +251,7 @@ div.header_link_left > a, a:visited {
 }
 .playerform {
     color: #FFFF99;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .footer {
