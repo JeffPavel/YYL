@@ -184,22 +184,25 @@ function player_form($n,$player,$hidden,$nb) {
     print " style=\"display:none\" ";
   }
   print " class=playerform>";
-  print "<TABLE><TR> ";
-  print "<TD width=250> <span class=required> First Name: </span> <INPUT TYPE=\"text\" onBlur=\"clearMe(this)\" size=15 name=\"pname";
+  print "<TABLE>";
+  print "<TR>"; //first row
+  print "<TD align=right> <span class=required> First Name: </span> <TD> <INPUT TYPE=\"text\" onBlur=\"clearMe(this)\" size=15 name=\"pname";
   print $n;
   print "\" value=\"".$player['name']."\"> ";
-  print "<TD width=150> <span class=required> School: </span> ";
+  print "<TD align=right> <span class=required> School: </span> ";
+  print "<TD>";
   print get_school_select($n,$player['school']);
 
-  print "<TD rowspan = 2 width=200 style=\"border-left: 2px dashed yellow; padding-left: 5px; margin-left: 5px; color: #AAAAAA\"> If the grade for your child is not available, please put your child on the waiting list by clicking ";
+  print "<TD rowspan = 3 width=200 style=\"border-left: 2px dashed yellow; padding-left: 5px; margin-left: 5px; color: #AAAAAA\"> If the grade for your child is not available, please put your child on the waiting list by clicking ";
   print "<A style=\"color: #FFFF99;\" HREF=\"https://docs.google.com/spreadsheet/viewform?formkey=dEhqcEFNdnJmYkxCSHl3VHRSWlAtcVE6MQ\" target=_blank> here </A>";
-  print "<TR>";
-  print "<TD> <span class=required> Age: </span> ";
+  print "<TR>"; //second row
+  print "<TD align=right> <span class=required> Age: </span> ";
+  print "<TD>";
   print "<INPUT TYPE=\"text\" size=3 maxlength=3 onBlur=\"clearMe(this)\" name=\"page";
   print $n;
   print "\" value=\"".$player['age']."\"> &nbsp;";
-
-  print "<span class=required> Gender: </span> ";
+  print "<TD align=right><span class=required> Gender: </span> ";
+  print "<TD>";
   print "<select id=\"psex".$n."\" name=\"psex"; 
   print $n;
   print "\" onChange=\"getGradeSelect(".$n.")\" onBlur=\"clearMe2(this)\"> <option value=\"0\" > - Select - </option>";
@@ -214,24 +217,28 @@ function player_form($n,$player,$hidden,$nb) {
   }
 
   print "> Female </select>";
-  print "<TD>";
+  print "<TR>"; //third row
+  print "<TD align=right>";
   print "<span class=required> Grade: </span> ";
+  print "<TD>";
   print get_grade_select($n,$player['grade']);
 
-  print "<TD>";
+  print "<TD align=right>";
   print "&nbsp;";
   print "<span class=required> Shirt Size: </span> ";
+  print "<TD>";
   print get_shirt_select($n,$player['shirt']);
 
-  print "<TR><TD align=right>";
-  print "Growth Priority: <TD> ";
-  print "<INPUT TYPE=\"text\" size=15 onBlur=\"clearMe(this)\" name=\"pgrowth";
+  print "<TR><TD align=right>";  //fourth row
+  print "Growth Priority: ";
+  print "<TD colspan=4>";
+  print "<INPUT TYPE=\"text\" size=50 maxlength=70 onBlur=\"clearMe(this)\" name=\"pgrowth";
   print $n;
   print "\" value=\"".$player['growth']."\"> &nbsp;";
 
-  print "<TD> <span class=\"note4\"> &larr; What can YYL do to help your child grow?</span>";
+  print "<span class=\"note4 nowrap\"> &larr; What can YYL do to help your child grow?</span>";
 
-  print "<TR><TD>";
+  print "<TR><TD colspan=2>";
   print "<input type=checkbox id=bagchk".$n;
   print " onClick=\"baglogic(document.getElementById('bagchk".$n."'),document.getElementById('newbagradiodiv".$n."'),document.getElementById('newbagtextdiv".$n."'),$n)\" name=preturning_player";
   print $n;
@@ -245,7 +252,7 @@ function player_form($n,$player,$hidden,$nb) {
 #    print " CHECKED";
 #  }
 #  print "> 2009 player";
-  print "<TD colspan=2> <div id=newbagradiodiv".$n."> New Bag: ";
+  print "<TD colspan=3> <div id=newbagradiodiv".$n."> New Bag: ";
   print "<input type=radio id=pnew_bag".$n." name=pnew_bag";
   print $n;
   if ($player['new_bag']==0) {
@@ -351,7 +358,7 @@ function get_school_select($n,$school) {
   $rv.="</select>&nbsp;";
 
   $rv.= "<TD> <span ";
-  if (in_array($school,$schools)) {
+  if (in_array($school,$schools) || $school == '' ) {
     $rv.=   " style=\"display:none;\" ";
   }
   $rv.= "id='schooltext".$n."' > School name: <font color=red> * </font> <INPUT id = pschool".$n." TYPE=\"text\" name=\"pschool";
