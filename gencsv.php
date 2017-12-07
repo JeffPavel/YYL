@@ -5,8 +5,8 @@ $sep = "\t";
 
 $fp = fopen("yylall.txt", 'w'); 
 $fppaid = fopen("yylpaid.txt", 'w'); 
-fwrite($fp,"Last Name\tNumbPlayers\te-mail address\tAlternate email\t Mother's Name\tFather's Name\tHome Phone #\tMother's Cell Phone\tFather's Cell Phone\tPreferred AutoCall #\tAddress1\t Address2\t City\tState\tZip\tInsurance\tPolicy#\tEmerg Name\tEmerg Phone #\tFamily Comment\tName\tNew Player\t Paid Amt\tNew Bag\tRec Date 10\tAge\tM/F\tGrade\tSize\tSchool\n");
-fwrite($fppaid,"Last Name\tNumbPlayers\te-mail address\tAlternate email\t Mother's Name\tFather's Name\tHome Phone #\tPreferred AutoCallH\tMother's Cell Phone\tPreferred AutoCallM\tFather's Cell Phone\tPreferred AutoCallF\tAddress1\t Address2\t City\tState\tZip\tInsurance\tPolicy#\tEmerg Name\tEmerg Phone #\tFamily Comment\tName\tNew Player\t Paid Amt\tNew Bag\tRec Date 10\tAge\tM/F\tGrade\tSize\tSchool\n");
+fwrite($fp,"Last Name\tNumbPlayers\te-mail address\tAlternate email\t Mother's Name\tFather's Name\tHome Phone #\tMother's Cell Phone\tFather's Cell Phone\tPreferred AutoCall #\tAddress1\t Address2\t City\tState\tZip\tInsurance\tPolicy#\tEmerg Name\tEmerg Phone #\tFamily Comment\tName\tNew Player\t Paid Amt\tNew Bag\tRec Date 10\tAge\tM/F\tGrade\tSize\tSchool\tGrowth\n");
+fwrite($fppaid,"Last Name\tNumbPlayers\te-mail address\tAlternate email\t Mother's Name\tFather's Name\tHome Phone #\tPreferred AutoCallH\tMother's Cell Phone\tPreferred AutoCallM\tFather's Cell Phone\tPreferred AutoCallF\tAddress1\t Address2\t City\tState\tZip\tInsurance\tPolicy#\tEmerg Name\tEmerg Phone #\tFamily Comment\tName\tNew Player\t Paid Amt\tNew Bag\tRec Date 10\tAge\tM/F\tGrade\tSize\tSchool\tGrowth\n");
 $p2 = null;
 foreach ($users as $user) {
   if ($user['players']) {
@@ -110,6 +110,7 @@ foreach ($users as $user) {
       }
       $str.=get_shirt_size($player['shirt']).$sep;
       $str.=$player['school'].$sep;
+      $str.=$player['growth'].$sep;
 
       $str.="\n";
 #      print $str;
