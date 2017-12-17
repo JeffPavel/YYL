@@ -236,7 +236,10 @@ function player_form($n,$player,$hidden,$nb) {
   print $n;
   print "\" value=\"".$player['growth']."\"> &nbsp;";
 
-  print "<span class=\"note4 nowrap\"> &larr; What can YYL do to help your child grow?</span>";
+  print "<span class=\"note4 nowrap\"> &larr; What can YYL do to help your child grow?";
+  print "<A HREF=\"https://docs.google.com/document/d/1ick8OVCVh5VYiobAgGsBfuuUXPD3cZQKsHi2bgF2_TI/edit?usp=sharing\" ";
+  print "onclick=\"window.open('https://docs.google.com/document/d/1ick8OVCVh5VYiobAgGsBfuuUXPD3cZQKsHi2bgF2_TI/edit?usp=sharing','newwindow','width=750,height=500,toolbar=no,menubar=no,status=no,resizable=yes'); return false;\"";
+  print "> (What's this?) </A> </span>";
 
   print "<TR><TD colspan=2>";
   print "<input type=checkbox id=bagchk".$n;
