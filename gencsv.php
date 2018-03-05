@@ -103,7 +103,7 @@ foreach ($users as $user) {
       $str.=$p3[$i].$sep; #TODO received
       $str.=$player['age'].$sep;
       $str.=$player['gender'].$sep;
-      if ($player['grade']==0) {
+      if ($player['grade']==0 || $player['grade']==13) {
 	$str.='K'.$sep;
       } else {
 	$str.=$player['grade'].$sep;

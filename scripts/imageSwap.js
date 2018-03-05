@@ -18,6 +18,7 @@ function getGradeSelect(player_num) {
 	var jgstatus=ibarr[15];
 	var sbstatus=ibarr[19];
 	var sgstatus=ibarr[23];
+	var kstatus=ibarr[26];
     } else {
 	var igarr = arr[1].split(' ');
 	var igstatus = igarr[3];
@@ -31,6 +32,8 @@ function getGradeSelect(player_num) {
 	var sbstatus = sbarr[3];
 	var sgarr = arr[5].split(' ');
 	var sgstatus = sgarr[3];
+	var karr = arr[6].split(' ');
+	var kstatus = karr[2];
     }
 
     var gp1 = document.forms[0].pgrade1;
@@ -58,6 +61,9 @@ function getGradeSelect(player_num) {
 
     clearOptions(actionElement);
 
+    if (kstatus == 'open') {
+	actionElement.options[actionElement.options.length] = new Option('K', '13');
+    }
     if ((val=='M' && ibstatus == 'open') || (val=='F' && igstatus=='open')) {
 	actionElement.options[actionElement.options.length] = new Option('1', '1');
     }
@@ -271,8 +277,8 @@ function checkplayers(form) {
 }
 function validateAge(agefield) {
     var test_result = /^\d+$/.test(agefield.value);
-    if (!test_result || agefield.value < 6 || agefield.value > 14) {
-	alert("Please enter age as a number between 6 and 14");
+    if (!test_result || agefield.value < 5 || agefield.value > 14) {
+	alert("Please enter age as a number between 5 and 14");
 	agefield.style.backgroundColor="yellow";
 	agefield.focus();
 	return false;
