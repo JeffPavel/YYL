@@ -234,7 +234,12 @@ foreach ($resultsbyid as $id => $row) {
         $school_full = $row['players'][$i]['school'];
 	print "(<span title=\"$school_full\" style=$style onClick=\"getPlayerInfo($id);\">$name</span>)";
 	print ", ";
-	print ("grade: ".$row['players'][$i]['grade'].", ");
+	$grade = $row['players'][$i]['grade'];
+	if ($grade != 13) {
+	  print ("grade: ".$row['players'][$i]['grade'].", ");
+	} else {
+	  print ("grade: K, ");
+	}
 #	print ("age: ".$row['players'][$i]['age'].", ");
 	print ("(".$row['players'][$i]['gender']."), ");
 	$school=substr($row['players'][$i]['school'],0,4);
