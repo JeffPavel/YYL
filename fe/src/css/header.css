@@ -1,0 +1,75 @@
+.main-header {
+    background-color: #fff; /* Adjust to match original site */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 10px 0;
+    width: 100%;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px; /* Standard max-width, adjust as needed */
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Navigation Groups */
+.nav-group {
+    flex: 1; /* Takes up equal remaining space on both sides */
+}
+
+.nav-group ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 20px; /* Space between individual links */
+}
+
+/* Align left nav to the right (towards logo) */
+.nav-group.left ul {
+    justify-content: flex-end;
+    margin-right: 30px; /* Space between links and logo */
+}
+
+/* Align right nav to the left (towards logo) */
+.nav-group.right ul {
+    justify-content: flex-start;
+    margin-left: 30px; /* Space between links and logo */
+}
+
+.nav-group a {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.nav-group a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* Logo */
+.logo-container {
+    flex: 0 0 auto; /* Do not stretch or shrink */
+}
+
+.header-logo {
+    height: 80px; /* Adjust based on your actual logo aspect ratio */
+    width: auto;
+    display: block;
+}
+
+/* Responsive: Collapse on smaller screens */
+@media (max-width: 992px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .nav-group.left ul { margin-right: 0; justify-content: center; }
+    .nav-group.right ul { margin-left: 0; justify-content: center; }
+    .logo-container { order: -1; /* Move logo to top on mobile */ }
+}

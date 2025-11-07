@@ -1,0 +1,315 @@
+/*-------------------------------------------
+Theme #536 
+Cat Sports
+Name-------------------------------------------*/
+html {
+    min-width: 990px;
+    color: #AAAAAA;
+}
+
+body {
+    margin: 0;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.70), rgba(0, 0, 0, 0.70)), url(/src/assets/images/field1.jpg);
+    background-color: #25831B;
+    background-position: center;
+    width: 100%;
+}
+
+/*-----
+Additional Jeff
+----*/
+input[disabled] {
+    background-color: #bbbbbb;
+}
+
+.reg_form {
+    font-size:20px;
+    color: #DDDDFF;
+    margin: 0;
+    font-weight: normal;
+}
+.menu a{
+    font-size:18px;
+    color: maroon;
+    margin: 0;
+    font-weight: normal;
+}
+.menu a:visited{
+
+    font-size:18px;
+    color: #FFFF99;
+    margin: 0px;
+    font-weight: normal;
+}
+
+.subheading{
+    background-color: #BBBBBB;
+    color: #000055;
+}
+
+.ty{
+    font-size:18px;
+    color: #FFFF55;
+}
+.step{
+    font-size:18px;
+    color: #55EEEE;
+    margin: auto;
+    width: 60%;
+}
+
+.banner{
+    padding-top: 30px;
+    margin: auto;
+    width: 40%;
+    font-size:20px;
+    color: #DDD;
+	text-align: center;
+}
+
+.bannerhr {
+	 width: 40%;
+}
+.main{
+    padding-top: 30px;
+    margin: auto;
+    width: 40%;
+    font-size:20px;
+}
+.message {
+    padding-top: 30px;
+    font-size:18px;
+    color: pink;
+    margin: auto;
+    width: 40%;
+}
+.message span {
+    font-size:18px;
+    color: yellow;
+}
+
+.note {
+    font-size:18px;
+    color: #AAAAAA;
+}
+.note A {
+    font-size:18px;
+    color: #AAAA00;
+}
+
+.note2{
+    font-size:18px;
+    color: YELLOW;
+}
+.note3 {
+    font-size:20px;
+    color: WHITE;
+}
+.note4  {
+    font-size:12px;
+    color: #AAAAAA;
+}
+.note4 a {
+    font-size:12px;
+    color: #FFFF99;
+    text-decoration: underline;
+}
+
+.note4 a:visited {
+    font-size:12px;
+    color: #FFFF99;
+    text-decoration: underline;
+}
+
+.note6 {
+  margin-left: 15px; 
+  padding-left: 5px; 
+  border-left: 1px yellow dashed;
+}
+.note5 {
+    font-size: 12px;
+    color: white;
+}
+.nowrap {
+    white-space: nowrap;
+}
+#text {
+    border: 1px #FFFF99 solid;
+}
+
+#disabled {
+    opacity : 0.4;
+    filter: alpha(opacity=40);
+    background-color: #000;
+}
+#divinfodisplay {
+    font-size: 16px;
+    text-align: center;
+    color: #FFFF99;
+    border: 2px solid #FFFF99;
+}
+.myhidden {
+    display:none;
+}
+.reg_form {
+    font-size:20px;
+    color: #DDDDFF;
+    margin: 0;
+    font-weight: normal;
+}
+.required:after { 
+    content:" *"; 
+    color: red;
+}
+
+/*--------------------------------
+Header
+---------------------------------*/
+.header_background {
+   width: 100%;
+   height: 100px;
+   background-color: #115599;
+   opacity: .9;
+   left: 0px;
+   top: 0px;
+   font-family: "Helvetica", "Tahoma", "Courier";
+   font-size: 15px;
+}
+.header_background_bottom {
+   width: 100%;
+   height: 30px;
+   background-color: #115599;
+   opacity: .6;
+   position: fixed;
+   bottom: 0;
+}
+.header {
+    text-align:center;
+}
+.header_first_link_left {
+    position: relative;
+    float: left;
+    font-size: 15px;
+    color: white;
+    font-family: "Helvetica", "Tahoma", "Courier";
+    padding-top: 30px;
+    padding-left: 25px;
+    padding-right: 5px;
+}
+.header_link_left {
+    position: relative;
+    float: left;
+    font-size: 15px;
+    color: white;
+    font-family: "Helvetica", "Tahoma", "Courier";
+    padding-top: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.header_last_link_right {
+    position: relative;
+    float: right;
+    font-size: 15px;
+    color: white;
+    font-family: "Helvetica", "Tahoma", "Courier";
+    padding-top: 30px;
+    padding-left: 5px;
+    padding-right: 25px;
+}
+.header_link_right {
+    position: relative;
+    float: right;
+    font-size: 15px;
+    color: white;
+    font-family: "Helvetica", "Tahoma", "Courier";
+    padding-top: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+div.header_link_right > a, a:visited {
+    color: white;
+}
+div.header_link_left > a, a:visited {
+    color: white;
+}
+
+.header_link_left_break {
+    position: relative;
+    float: left;
+    font-size: 15px;
+    color: white;
+    font-family: "Helvetica", "Tahoma", "Courier";
+    padding-top: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.header_link_right_break {
+    position: relative;
+    float: right;
+    font-size: 15px;
+    color: white;
+    font-family: "Helvetica", "Tahoma", "Courier";
+    padding-top: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.header_image {
+    margin: 0 auto;
+    position: relative;
+    display: inline-block;
+    width:100px;
+}
+.main {
+    width: 60%;
+    margin: auto;
+}
+.playerform {
+    color: #FFFF99;
+    font-size: 15px;
+}
+
+.footer {
+   color: FFFFFF;
+   width: 100%;
+   height: 40px;
+   background-color: #115599;
+   opacity: .5;
+   position: absolute;
+   left: 0px;
+   bottom: 0px;
+   text-align: center;
+}
+.footer2 {
+    padding-top: 5px;
+   color: FFFFFF;
+   width: 100%;
+   height: 40px;
+   background-color: #115599;
+   opacity: .5;
+   text-align: center;
+}
+
+.footertext {
+    position: absolute;
+    bottom: 15px;
+    left: 500px;
+}
+
+/*--------------------------
+Extra Stuff
+--------------------------*/
+
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
