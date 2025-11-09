@@ -2,3 +2,9 @@ bak
 *~
 error_log
 *test*
+eclipse*
+fe/dist
+fe/deploy.cjs
+fe/node_modules
+.project
+fe/.settings
