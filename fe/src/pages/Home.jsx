@@ -16,8 +16,8 @@ const Home = () => {
 		async function fetchData() {
 			console.log('Getting setup data...');
 			const c = await Remote.getInfo();
-			setRegfee(c.regfee);
-			setNewbagfee(c.newbagfee);
+			setRegfee(Number(c.regfee));
+			setNewbagfee(Number(c.newbagfee));
 			setDivtext(c.divtext);
 			setPasscode(c.passcode);
 			setTerms(c.disclaimer);
@@ -28,7 +28,7 @@ const Home = () => {
 	return (
 		<div className="home-container">
 			<Instructions regfee={regfee} newbagfee={newbagfee}/>
-			<RegistrationForm regfee={regfee} newbagfee={newbagfee} serverStatusData={divtext} passcode={passcode} terms={terms} />
+			<RegistrationForm costPerPlayer={regfee} newBagFee={newbagfee} serverStatusData={divtext} passcode={passcode} terms={terms} />
 		</div>
 	)
 };

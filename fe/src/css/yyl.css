@@ -18,6 +18,24 @@ body {
 /*-----
 Additional Jeff
 ----*/
+.info-text-container a {
+  /* * Use Bootstrap's own variable for links to ensure it's
+   * the correct "brand blue" and will update with themes.
+  */
+  color: var(--bs-link-color) !important;
+  text-decoration: underline !important;
+  font-weight: bold;
+}
+
+.info-text-container a:hover {
+  color: var(--bs-link-hover-color) !important;
+}
+
+.form-select.grade-disabled-text {
+  font-size: 0.85rem; 
+  color: #6c757d; /* This ensures it looks like a placeholder */
+}
+
 input[disabled] {
     background-color: #bbbbbb;
 }
