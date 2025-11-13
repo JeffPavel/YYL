@@ -1,12 +1,14 @@
-import React, { useState, useMemo, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { Form, Button, Container, Row, Col, Card, Alert, Spinner } from 'react-bootstrap';
-import { useForm, useFieldArray, useWatch } from 'react-hook-form';
+// 1. IMPORT CONTROLLER
+import { useForm, useFieldArray, useWatch, Controller } from 'react-hook-form';
 
-import { parseLeagueStatus, mapLegacyDataToState, createLegacyPayload } from '../util/Utils'; 
+// Import our helpers
+import { parseLeagueStatus, mapLegacyDataToState, createLegacyPayload } from '../util/Utils';
 import ConfirmationScreen from './ConfirmationScreen';
 import PaymentScreen from './PaymentScreen';
 import LeagueStatus from './LeagueStatus';
-import PlayerForm from './PlayerForm'; 
+import PlayerForm from './PlayerForm';
 import { Remote } from '../api/Remote';
 
 const defaultPlayer = {
@@ -16,7 +18,7 @@ const defaultPlayer = {
 };
 
 const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPerPlayer = 100, newBagFee = 15, terms }) => {
-    
+
     const [step, setStep] = useState('register');
     const [isChecking, setIsChecking] = useState(false);
     const [existingUser, setExistingUser] = useState(false);
@@ -25,23 +27,23 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
 
     const formRef = useRef(null);
 
-    const { 
-        register, 
+    const {
+        register,
         handleSubmit,
         formState: { errors },
-        control,       
-        watch,         
-        setValue,     
-        setError,     
-        reset          
+        control,
+        watch,
+        setValue,
+        setError,
+        reset
     } = useForm({
         defaultValues: {
             id: '', email1: '', email2: '', lastName: '', motherName: '', fatherName: '',
             phone: '', cell1: '', cell2: '', prefContact: 'home',
             addr1: '', addr2: '', city: '', state: 'NJ', zip: '',
             ecn: '', ecp: '', comments: '', passcode: '',
-            numPlayers: 1, 
-            players: [defaultPlayer] 
+            numPlayers: 1,
+            players: [defaultPlayer]
         }
     });
 
@@ -51,47 +53,14 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
         name: "players"
     });
 
-    const numPlayers = useWatch({ control, name: "numPlayers" });
-
-	useLayoutEffect(() => {
-        if (!numPlayers) return; 
-        
-        const diff = numPlayers - fields.length;
-
-        if (diff > 0) {
-            for (let i = 0; i < diff; i++) {
-                append(defaultPlayer);
-            }
-
-            setTimeout(() => {
-                if (formRef.current) {
-                    const playersData = watch("players");
-                    const firstEmptyPlayerIndex = playersData.findIndex(p => !p.name);
-                    
-                    let targetInput = null;
-
-                    if (firstEmptyPlayerIndex !== -1) {
-                        targetInput = formRef.current.querySelector(
-                            `input[name="players.${firstEmptyPlayerIndex}.name"]`
-                        );
-                    }
-                    
-                    if (targetInput) {
-                        targetInput.focus();
-                    }
-                }
-            }, 0);
-
-        } else if (diff < 0) {
-            remove(Array.from({ length: Math.abs(diff) }, (_, i) => fields.length - 1 - i));
-        }
-    }, [numPlayers, fields, append, remove]);
+    // 2. DELETE THE useLayoutEffect BLOCK
+    // (logic is moved to the <Controller> onChange)
 
     const { leagueStatus, additionalInfoText } = useMemo(() => {
-        const lines = (serverStatusData.toString() || "").split('\n'); 
+        const lines = (serverStatusData.toString() || "").split('\n');
         const status = parseLeagueStatus(lines);
         const emptyLineIndex = lines.findIndex(line => line.trim() === '');
-        let infoText = []; 
+        let infoText = [];
         if (emptyLineIndex !== -1) {
             const textLines = lines.slice(emptyLineIndex + 1);
             infoText = textLines.map((line, index) => {
@@ -125,7 +94,7 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
             if (result.email) {
                 const structuredData = mapLegacyDataToState(result);
                 // Use RHF's reset to populate the entire form
-                reset(structuredData); 
+                reset(structuredData);
                 setExistingUser(true);
             }
         } catch (error) {
@@ -154,7 +123,7 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                 } else {
                     await Remote.registerUser(createLegacyPayload(data));
                 }
-                setStep('update_success'); 
+                setStep('update_success');
             } catch (error) {
                 console.error("Update failed!", error);
                 setSubmitError("An error occurred while saving. Please try again.");
@@ -170,7 +139,7 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
         console.log("Form validation failed:", formErrors);
     };
 
-    const currentFormData = watch(); 
+    const currentFormData = watch();
 
     const handleAccept = async () => {
         setIsSubmitting(true);
@@ -178,7 +147,7 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
         try {
             const payloadString = createLegacyPayload(currentFormData); // Use watched data
             console.log("Submitting:", payloadString);
-            
+
             if (currentFormData.id) {
                 await Remote.updateUser(payloadString);
             } else {
@@ -212,12 +181,12 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
             </Container>
         );
     }
-    
+
     if (step === 'register') {
         return (
             <Container className="py-4" style={{ maxWidth: '900px' }}>
                 <Form noValidate onSubmit={handleSubmit(onSubmit, onError)} ref={formRef}>
-                    
+
                     {submitError && <Alert variant="danger">{submitError}</Alert>}
 
                     <Card className="mb-4">
@@ -237,8 +206,12 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                                                 type="email"
                                                 placeholder={isChecking ? "Checking..." : ""}
                                                 disabled={isChecking}
-                                                {...register("email1", { 
-                                                    required: "Please provide a valid email." 
+                                                {...register("email1", {
+                                                    required: "Please provide a valid email.",
+                                                    pattern: {      
+                                                       value: /^$|[^@]+@[^@]+\.[a-zA-Z]{2,6}/,
+                                                       message: "Please provide a valid email"
+                                                    }
                                                 })}
                                                 isInvalid={!!errors.email1}
                                                 onBlur={handleEmailBlur}
@@ -252,7 +225,19 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                                 <Col md={6}>
                                     <Form.Group>
                                         <Form.Label>Parent 2 Email</Form.Label>
-                                        <Form.Control type="email" {...register("email2")} />
+                                        <Form.Control type="email" 
+                                            isInvalid={!!errors.email2}  
+                                            {...register("email2", 
+                                            { pattern: {      
+                                                       value: /[^@]+@[^@]+\.[a-zA-Z]{2,6}/,
+                                                       message: "Please provide a valid email"
+                                                    }
+                                            }
+                                         )} />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.email2?.message}
+                                        </Form.Control.Feedback>
+
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -260,10 +245,10 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                                 <Col md={4}>
                                     <Form.Group>
                                         <Form.Label>Last Name <Required /></Form.Label>
-                                        <Form.Control 
-                                            type="text" 
-                                            {...register("lastName", { 
-                                                required: "Please fill out this field." 
+                                        <Form.Control
+                                            type="text"
+                                            {...register("lastName", {
+                                                required: "Please fill out this field."
                                             })}
                                             isInvalid={!!errors.lastName}
                                         />
@@ -275,13 +260,13 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                                 <Col md={4}>
                                     <Form.Group>
                                         <Form.Label>Mother's Name</Form.Label>
-                                        <Form.Control type="text" {...register("motherName")}/>
+                                        <Form.Control type="text" {...register("motherName")} />
                                     </Form.Group>
                                 </Col>
                                 <Col md={4}>
                                     <Form.Group>
                                         <Form.Label>Father's Name</Form.Label>
-                                        <Form.Control type="text" {...register("fatherName")}/>
+                                        <Form.Control type="text" {...register("fatherName")} />
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -311,8 +296,8 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                                 <Col md={4}>
                                     <Form.Group>
                                         <Form.Label>Mother's Cell <Required /></Form.Label>
-                                        <Form.Control 
-                                            type="tel" 
+                                        <Form.Control
+                                            type="tel"
                                             {...register("cell1", {
                                                 required: "Mother's cell is required.",
                                                 pattern: {
@@ -331,8 +316,8 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                                 <Col md={4}>
                                     <Form.Group>
                                         <Form.Label>Father's Cell <Required /></Form.Label>
-                                        <Form.Control 
-                                            type="tel" 
+                                        <Form.Control
+                                            type="tel"
                                             {...register("cell2", {
                                                 required: "Father's cell is required.",
                                                 pattern: {
@@ -352,23 +337,23 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                             <Form.Group as={Row} className="mb-3 bg-light py-2 rounded mx-0">
                                 <Form.Label column sm={3} className="fw-bold">Preferred Auto-Call:</Form.Label>
                                 <Col sm={9} className="d-flex align-items-center">
-                                    <Form.Check inline label="Home" type="radio" value="home" 
+                                    <Form.Check inline label="Home" type="radio" value="home"
                                         {...register("prefContact")} />
-                                    <Form.Check inline label="Mother's Cell" type="radio" value="cell1" 
+                                    <Form.Check inline label="Mother's Cell" type="radio" value="cell1"
                                         {...register("prefContact")} />
-                                    <Form.Check inline label="Father's Cell" type="radio" value="cell2" 
+                                    <Form.Check inline label="Father's Cell" type="radio" value="cell2"
                                         {...register("prefContact")} />
                                 </Col>
                             </Form.Group>
                             <Row className="mb-2">
-                                <Col md={6}><Form.Group><Form.Label>Address</Form.Label><Form.Control type="text" {...register("addr1")}/></Form.Group></Col>
-                                <Col md={6}><Form.Group><Form.Label>Address (cont)</Form.Label><Form.Control type="text" {...register("addr2")}/></Form.Group></Col>
+                                <Col md={6}><Form.Group><Form.Label>Address</Form.Label><Form.Control type="text" {...register("addr1")} /></Form.Group></Col>
+                                <Col md={6}><Form.Group><Form.Label>Address (cont)</Form.Label><Form.Control type="text" {...register("addr2")} /></Form.Group></Col>
                             </Row>
                             <Row className="mb-3">
                                 <Col md={5}><Form.Group><Form.Label>City <Required /></Form.Label>
-                                 <Form.Control type="text" isInvalid={!!errors.cell1} {...register("city", { required: "City is required"})} />
-                              
-                                  </Form.Group></Col>
+                                    <Form.Control type="text" isInvalid={!!errors.city} {...register("city", { required: "City is required" })} />
+                                    <Form.Control.Feedback type="invalid">{errors.city?.message}</Form.Control.Feedback>
+                                </Form.Group></Col>
                                 <Col md={4}>
                                     <Form.Group>
                                         <Form.Label>State</Form.Label>
@@ -378,15 +363,15 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                                         </Form.Select>
                                     </Form.Group>
                                 </Col>
-                                <Col md={3}><Form.Group><Form.Label>Zip Code</Form.Label><Form.Control type="text" {...register("zip")}/></Form.Group></Col>
+                                <Col md={3}><Form.Group><Form.Label>Zip Code</Form.Label><Form.Control type="text" {...register("zip")} /></Form.Group></Col>
                             </Row>
                             <Row className="mb-3">
-                                <Col md={6}><Form.Group><Form.Label>Emergency Contact Name</Form.Label><Form.Control type="text" {...register("ecn")}/></Form.Group></Col>
-                                <Col md={6}><Form.Group><Form.Label>Emergency Contact Phone</Form.Label><Form.Control type="text" {...register("ecp")}/></Form.Group></Col>
+                                <Col md={6}><Form.Group><Form.Label>Emergency Contact Name</Form.Label><Form.Control type="text" {...register("ecn")} /></Form.Group></Col>
+                                <Col md={6}><Form.Group><Form.Label>Emergency Contact Phone</Form.Label><Form.Control type="text" {...register("ecp")} /></Form.Group></Col>
                             </Row>
                             <Form.Group className="mb-3">
                                 <Form.Label>Additional Comments</Form.Label>
-                                <Form.Control type="text" {...register("comments")}/>
+                                <Form.Control type="text" {...register("comments")} />
                                 <Form.Text className="text-muted">No teammate requests accepted.</Form.Text>
                             </Form.Group>
                         </Card.Body>
@@ -396,20 +381,63 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                     <Card className="mb-4">
                         <Card.Header className="bg-info text-white">Player Information</Card.Header>
                         <Card.Body>
+                            {/* 3. REVERT TO CONTROLLER FOR DROPDOWN */}
                             <Form.Group as={Row} className="mb-4 align-items-center">
                                 <Form.Label column sm={4} md={3} className="fw-bold fs-5">
                                     Players for upcoming season:
                                 </Form.Label>
                                 <Col sm={3} md={2}>
-                                    <Form.Select 
-                                        size="lg" 
-                                        {...register("numPlayers")}
-                                    >
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                    </Form.Select>
+                                    <Controller
+                                        name="numPlayers"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Form.Select
+                                                {...field}
+                                                size="lg"
+                                                onChange={e => {
+                                                    // This logic now runs *only* when the user changes the value
+                                                    field.onChange(e);
+
+                                                    const newNumPlayers = parseInt(e.target.value, 10);
+                                                    const currentFieldsLength = fields.length;
+                                                    const diff = newNumPlayers - currentFieldsLength;
+
+                                                    if (diff > 0) {
+                                                        for (let i = 0; i < diff; i++) {
+                                                            append(defaultPlayer);
+                                                        }
+
+                                                        setTimeout(() => {
+                                                            if (formRef.current) {
+                                                                const playersData = watch("players");
+                                                                // Find the first player with an empty name
+                                                                const firstEmptyPlayerIndex = playersData.findIndex(p => !p.name);
+                                                                // If all are filled, default to focusing the first new one
+                                                                const targetIndex = (firstEmptyPlayerIndex !== -1) ? firstEmptyPlayerIndex : currentFieldsLength;
+
+                                                                const targetInput = formRef.current.querySelector(
+                                                                    `input[name="players.${targetIndex}.name"]`
+                                                                );
+
+                                                                if (targetInput) {
+                                                                    targetInput.focus();
+                                                                    // 4. ADD SCROLLINTOVIEW
+                                                                    targetInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                                }
+                                                            }
+                                                        }, 0);
+                                                    } else if (diff < 0) {
+                                                        remove(Array.from({ length: Math.abs(diff) }, (_, i) => currentFieldsLength - 1 - i));
+                                                    }
+                                                }}
+                                            >
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                            </Form.Select>
+                                        )}
+                                    />
                                 </Col>
                             </Form.Group>
 
@@ -417,11 +445,11 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                                 <PlayerForm
                                     key={field.id}
                                     index={index}
-                                    control={control} 
-                                    register={register} 
-                                    errors={errors} 
-                                    watch={watch} 
-                                    setValue={setValue} 
+                                    control={control}
+                                    register={register}
+                                    errors={errors}
+                                    watch={watch}
+                                    setValue={setValue}
                                     additionalInfoText={additionalInfoText}
                                     leagueStatus={leagueStatus}
                                     newBagFee={newBagFee}
@@ -478,7 +506,7 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                 onGoBack={handleChangeInfo}
                 isSubmitting={isSubmitting}
                 submitError={submitError}
-				terms={terms}
+                terms={terms}
             />
         );
     }

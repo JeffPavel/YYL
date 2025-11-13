@@ -127,7 +127,7 @@ export const mapLegacyDataToState = (apiData) => {
             shirt: pData.shirt || '',
             growth: pData.growth || '',
             // Handle legacy checkbox values (often '1', 'on', or true)
-            isNewPlayer: ['on', '1', true, 1].includes(pData.preturning_player),
+            isNewPlayer: pData.returning_player != 1,
             // As you pointed out, the server field is 'new_bag'
             wantsBag: String(pData.new_bag || '0'),
             paid: parseInt(pData.paid || '0', 10)
