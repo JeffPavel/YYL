@@ -28,7 +28,7 @@ const Home = () => {
 	return (
 		<div className="home-container">
 			<Instructions regfee={regfee} newbagfee={newbagfee}/>
-			<RegistrationForm costPerPlayer={regfee} newBagFee={newbagfee} serverStatusData={divtext} passcode={passcode} terms={terms} />
+			<RegistrationForm costPerPlayer={regfee} newBagFee={newbagfee} serverStatusData={divtext} requiredPasscode={passcode} terms={terms} />
 		</div>
 	)
 };
