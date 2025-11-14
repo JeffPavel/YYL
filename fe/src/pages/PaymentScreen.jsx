@@ -5,7 +5,7 @@ import paypalLogo from '/src/assets/images/horizontal_solution_PPeCheck.gif';
 const PaymentScreen = ({ formData, costPerPlayer, newBagFee, onGoBack }) => {
     // 1. Create a ref to access the form DOM element
     const paypalFormRef = useRef(null);
-
+console.log(formData);
     // 2. Memoize all calculations. This recalculates only if formData changes.
     const paymentDetails = useMemo(() => {
         // Find all players who are unpaid and have a name

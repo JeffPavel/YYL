@@ -1,8 +1,6 @@
-export const parseLeagueStatus = (status) => {
-    // Store objects { value, label } instead of just strings
+export const parseLeagueStatus = (statusLines) => {
     const availability = { M: [], F: [] };
     let hasAnyOpen = false;
-	const statusLines = (status.toString()).split(/\r\n/);
     statusLines.forEach(line => {
         const lowerLine = line.toLowerCase();
         if (lowerLine.includes('- open')) {
@@ -102,6 +100,69 @@ export const createLegacyPayload = (formData) => {
 };
 
 export const mapLegacyDataToState = (apiData) => {
+    
+    // 1. Determine the correct number of players
+    // This is the "single source of truth"
+    const numPlayers = apiData.num_players 
+        ? parseInt(apiData.num_players, 10) 
+        : (apiData.players?.length || 1); // Default to 1 if no players
+
+    // 2. Create a player array of *exactly* that length
+    const mappedPlayers = Array.from({ length: numPlayers }, (_, i) => {
+        const pData = (apiData.players && apiData.players[i]) || {}; // Get player data or empty object
+        
+        return {
+            id: pData.id || '',
+            name: pData.name || '',
+            // Check if school is standard list, otherwise 'OTHER'
+            school: ['BPY', 'GBDS', 'Heatid', 'Lyncrest', 'MDS', 'Moriah', 'Noam', 'RYNJ', 'Yavneh'].includes(pData.school)
+                ? pData.school || ''
+                : (pData.school ? 'OTHER' : ''),
+            otherSchool: !['BPY', 'GBDS', 'Heatid', 'Lyncrest', 'MDS', 'Moriah', 'Noam', 'RYNJ', 'Yavneh'].includes(pData.school)
+                 ? pData.school || ''
+                 : '',
+            age: pData.age || '',
+            gender: pData.gender || '',
+            grade: pData.grade || '',
+            shirt: pData.shirt || '',
+            growth: pData.growth || '',
+            // Handle legacy checkbox values (often '1', 'on', or true)
+            isNewPlayer: pData.returning_player != 1,
+            // As you pointed out, the server field is 'new_bag'
+            wantsBag: String(pData.new_bag || '0'),
+            paid: parseInt(pData.paid || '0', 10)
+        };
+    });
+
+    // 3. Map User Data
+    return {
+        id: apiData.id || '',
+        email1: apiData.email || '',
+        email2: apiData.email2 || '',
+        lastName: apiData.last_name || '',
+        motherName: apiData.mother_name || '',
+        fatherName: apiData.father_name || '',
+        phone: apiData.phone || '',
+        cell1: apiData.cell1 || '',
+        cell2: apiData.cell2 || '',
+        prefContact: apiData.pref_contact || 'home',
+        addr1: apiData.addr1 || '',
+        addr2: apiData.addr2 || '',
+        city: apiData.city || '',
+        state: apiData.state || 'NJ',
+        zip: apiData.zip || '',
+        ecn: apiData.emerg_cont_name || '',
+        ecp: apiData.emerg_cont_phone || '',
+        comments: apiData.comments || '',
+        passcode: '',
+        
+        // 4. Ensure numPlayers and players.length match
+        numPlayers: numPlayers, 
+        players: mappedPlayers
+    };
+};
+
+export const mapLegacyDataToStateOld = (apiData) => {
 	console.log(apiData);
     // 1. Always initialize 4 empty player slots
     const mappedPlayers = Array(4).fill(null).map((_, i) => {

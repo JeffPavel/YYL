@@ -19,10 +19,12 @@ All new YYL players get a league bag as our gift. Select the box 'New YYL Player
 </p>
 <p className="banner">
 Returning players can purchase a league bag for ${ newbagfee }.
-If you want one, select 'New Bag = Yes' to add the $15 to your purchase & leave 'New YYL Player' unchecked.
+If you want one, select 'New Bag = Yes' to add the ${ newbagfee } to your purchase & leave 'New YYL Player' unchecked.
 If you do not want one, select 'New Bag = No' & leave 'New YYL Player' unchecked. This is the default setting.
 </p>
-<hr className="bannerhr"/>
+<p className="banner info-text-container">
+     Click here for <a target="_blank" href="https://docs.google.com/document/d/1_qOR0tEVtxxVBisk322qNZgQs3BbhPaWZLF7ug-kBR8/edit?hl=en&authkey=CLOQrdgG"> Registration Instructions </a> 
+</p>
 </div>
 )
 };

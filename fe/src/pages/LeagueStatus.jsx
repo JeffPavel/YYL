@@ -8,8 +8,8 @@ const LeagueStatus = ({ text }) => {
 	status = status.replace(/open/g,"<font color=green>open</font>");
 	return (
 		<Card className="mb-4">
-		  <Card.Header className="bg-primary text-white">League Status</Card.Header>
-			<Card.Body dangerouslySetInnerHTML={{ __html: status }} />
+		  <Card.Header className="bg-primary text-white note">Division Status</Card.Header>
+			<Card.Body className="info-text-container" dangerouslySetInnerHTML={{ __html: status }} />
 		</Card>
 	)
 };
