@@ -53,9 +53,6 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
         name: "players"
     });
 
-    // 2. DELETE THE useLayoutEffect BLOCK
-    // (logic is moved to the <Controller> onChange)
-
     const { leagueStatus, additionalInfoText } = useMemo(() => {
         const lines = (serverStatusData.toString() || "").split('\n');
         const status = parseLeagueStatus(lines);
@@ -192,6 +189,7 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                     <Card className="mb-4">
                         <Card.Header className="bg-primary text-white">Family Information</Card.Header>
                         <Card.Body>
+                            {/* --- THIS IS THE START OF THE CHANGE --- */}
                             <Row className="mb-2">
                                 <Col md={6}>
                                     <Form.Group>
@@ -207,11 +205,7 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                                                 placeholder={isChecking ? "Checking..." : ""}
                                                 disabled={isChecking}
                                                 {...register("email1", {
-                                                    required: "Please provide a valid email.",
-                                                    pattern: {      
-                                                       value: /^$|[^@]+@[^@]+\.[a-zA-Z]{2,6}/,
-                                                       message: "Please provide a valid email"
-                                                    }
+                                                    required: "Please provide a valid email."
                                                 })}
                                                 isInvalid={!!errors.email1}
                                                 onBlur={handleEmailBlur}
@@ -222,158 +216,157 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
-                                <Col md={6}>
-                                    <Form.Group>
-                                        <Form.Label>Parent 2 Email</Form.Label>
-                                        <Form.Control type="email" 
-                                            isInvalid={!!errors.email2}  
-                                            {...register("email2", 
-                                            { pattern: {      
-                                                       value: /[^@]+@[^@]+\.[a-zA-Z]{2,6}/,
-                                                       message: "Please provide a valid email"
-                                                    }
-                                            }
-                                         )} />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.email2?.message}
-                                        </Form.Control.Feedback>
+                                
+                                {/* Parent 2 Email is hidden if user exists */}
+                                {!existingUser && (
+                                    <Col md={6}>
+                                        <Form.Group>
+                                            <Form.Label>Parent 2 Email</Form.Label>
+                                            <Form.Control type="email" {...register("email2")} />
+                                        </Form.Group>
+                                    </Col>
+                                )}
+                            </Row>
 
+                            {/* All other family info is hidden if user exists */}
+                            {!existingUser && (
+                                <>
+                                    <Row className="mb-2">
+                                        <Col md={4}>
+                                            <Form.Group>
+                                                <Form.Label>Last Name <Required /></Form.Label>
+                                                <Form.Control
+                                                    type="text"
+                                                    {...register("lastName", {
+                                                        required: "Please fill out this field."
+                                                    })}
+                                                    isInvalid={!!errors.lastName}
+                                                />
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errors.lastName?.message}
+                                                </Form.Control.Feedback>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={4}>
+                                            <Form.Group>
+                                                <Form.Label>Mother's Name</Form.Label>
+                                                <Form.Control type="text" {...register("motherName")} />
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={4}>
+                                            <Form.Group>
+                                                <Form.Label>Father's Name</Form.Label>
+                                                <Form.Control type="text" {...register("fatherName")} />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                    <Row className="mb-3">
+                                        <Col md={4}>
+                                            <Form.Group>
+                                                <Form.Label>Home Phone</Form.Label>
+                                                <Form.Control
+                                                    type="tel"
+                                                    {...register("phone", {
+                                                        pattern: {
+                                                            value: /^[1-9]\d{9}$/,
+                                                            message: "10 digits, no spaces (e.g., 2015551234)."
+                                                        }
+                                                    })}
+                                                    isInvalid={!!errors.phone}
+                                                    aria-describedby="phone-help-text"
+                                                />
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errors.phone?.message}
+                                                </Form.Control.Feedback>
+                                                <Form.Text id="phone-help-text" muted>
+                                                    10 digits, no dashes or spaces.
+                                                </Form.Text>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={4}>
+                                            <Form.Group>
+                                                <Form.Label>Mother's Cell <Required /></Form.Label>
+                                                <Form.Control
+                                                    type="tel"
+                                                    {...register("cell1", {
+                                                        required: "Mother's cell is required.",
+                                                        pattern: {
+                                                            value: /^[1-9]\d{9}$/,
+                                                            message: "10 digits, no spaces."
+                                                        }
+                                                    })}
+                                                    isInvalid={!!errors.cell1}
+                                                />
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errors.cell1?.message}
+                                                </Form.Control.Feedback>
+                                                <Form.Text className="text-muted">For single parent household enter same number for both parents.</Form.Text>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={4}>
+                                            <Form.Group>
+                                                <Form.Label>Father's Cell <Required /></Form.Label>
+                                                <Form.Control
+                                                    type="tel"
+                                                    {...register("cell2", {
+                                                        required: "Father's cell is required.",
+                                                        pattern: {
+                                                            value: /^[1-9]\d{9}$/,
+                                                            message: "10 digits, no spaces."
+                                                        }
+                                                    })}
+                                                    isInvalid={!!errors.cell2}
+                                                />
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errors.cell2?.message}
+                                                </Form.Control.Feedback>
+                                                <Form.Text className="text-muted">For single parent household enter same number for both parents.</Form.Text>
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                    <Form.Group as={Row} className="mb-3 bg-light py-2 rounded mx-0">
+                                        <Form.Label column sm={3} className="fw-bold">Preferred Auto-Call:</Form.Label>
+                                        <Col sm={9} className="d-flex align-items-center">
+                                            <Form.Check inline label="Home" type="radio" value="home"
+                                                {...register("prefContact")} />
+                                            <Form.Check inline label="Mother's Cell" type="radio" value="cell1"
+                                                {...register("prefContact")} />
+                                            <Form.Check inline label="Father's Cell" type="radio" value="cell2"
+                                                {...register("prefContact")} />
+                                        </Col>
                                     </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row className="mb-2">
-                                <Col md={4}>
-                                    <Form.Group>
-                                        <Form.Label>Last Name <Required /></Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            {...register("lastName", {
-                                                required: "Please fill out this field."
-                                            })}
-                                            isInvalid={!!errors.lastName}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.lastName?.message}
-                                        </Form.Control.Feedback>
+                                    <Row className="mb-2">
+                                        <Col md={6}><Form.Group><Form.Label>Address</Form.Label><Form.Control type="text" {...register("addr1")} /></Form.Group></Col>
+                                        <Col md={6}><Form.Group><Form.Label>Address (cont)</Form.Label><Form.Control type="text" {...register("addr2")} /></Form.Group></Col>
+                                    </Row>
+                                    <Row className="mb-3">
+                                        <Col md={5}><Form.Group><Form.Label>City <Required /></Form.Label>
+                                            <Form.Control type="text" isInvalid={!!errors.city} {...register("city", { required: "City is required" })} />
+                                            <Form.Control.Feedback type="invalid">{errors.city?.message}</Form.Control.Feedback>
+                                        </Form.Group></Col>
+                                        <Col md={4}>
+                                            <Form.Group>
+                                                <Form.Label>State</Form.Label>
+                                                <Form.Select {...register("state")}>
+                                                    <option value="NJ">New Jersey</option>
+                                                    <option value="NY">New York</option>
+                                                </Form.Select>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={3}><Form.Group><Form.Label>Zip Code</Form.Label><Form.Control type="text" {...register("zip")} /></Form.Group></Col>
+                                    </Row>
+                                    <Row className="mb-3">
+                                        <Col md={6}><Form.Group><Form.Label>Emergency Contact Name</Form.Label><Form.Control type="text" {...register("ecn")} /></Form.Group></Col>
+                                        <Col md={6}><Form.Group><Form.Label>Emergency Contact Phone</Form.Label><Form.Control type="text" {...register("ecp")} /></Form.Group></Col>
+                                    </Row>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Additional Comments</Form.Label>
+                                        <Form.Control type="text" {...register("comments")} />
+                                        <Form.Text className="text-muted">No teammate requests accepted.</Form.Text>
                                     </Form.Group>
-                                </Col>
-                                <Col md={4}>
-                                    <Form.Group>
-                                        <Form.Label>Mother's Name</Form.Label>
-                                        <Form.Control type="text" {...register("motherName")} />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={4}>
-                                    <Form.Group>
-                                        <Form.Label>Father's Name</Form.Label>
-                                        <Form.Control type="text" {...register("fatherName")} />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row className="mb-3">
-                                <Col md={4}>
-                                    <Form.Group>
-                                        <Form.Label>Home Phone</Form.Label>
-                                        <Form.Control
-                                            type="tel"
-                                            {...register("phone", {
-                                                pattern: {
-                                                    value: /^[1-9]\d{9}$/,
-                                                    message: "10 digits, no spaces (e.g., 2015551234)."
-                                                }
-                                            })}
-                                            isInvalid={!!errors.phone}
-                                            aria-describedby="phone-help-text"
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.phone?.message}
-                                        </Form.Control.Feedback>
-                                        <Form.Text id="phone-help-text" muted>
-                                            10 digits, no dashes or spaces.
-                                        </Form.Text>
-                                    </Form.Group>
-                                </Col>
-                                <Col md={4}>
-                                    <Form.Group>
-                                        <Form.Label>Mother's Cell <Required /></Form.Label>
-                                        <Form.Control
-                                            type="tel"
-                                            {...register("cell1", {
-                                                required: "Mother's cell is required.",
-                                                pattern: {
-                                                    value: /^[1-9]\d{9}$/,
-                                                    message: "10 digits, no spaces."
-                                                }
-                                            })}
-                                            isInvalid={!!errors.cell1}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.cell1?.message}
-                                        </Form.Control.Feedback>
-                                        <Form.Text className="text-muted">For single parent household enter same number for both parents.</Form.Text>
-                                    </Form.Group>
-                                </Col>
-                                <Col md={4}>
-                                    <Form.Group>
-                                        <Form.Label>Father's Cell <Required /></Form.Label>
-                                        <Form.Control
-                                            type="tel"
-                                            {...register("cell2", {
-                                                required: "Father's cell is required.",
-                                                pattern: {
-                                                    value: /^[1-9]\d{9}$/,
-                                                    message: "10 digits, no spaces."
-                                                }
-                                            })}
-                                            isInvalid={!!errors.cell2}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.cell2?.message}
-                                        </Form.Control.Feedback>
-                                        <Form.Text className="text-muted">For single parent household enter same number for both parents.</Form.Text>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            <Form.Group as={Row} className="mb-3 bg-light py-2 rounded mx-0">
-                                <Form.Label column sm={3} className="fw-bold">Preferred Auto-Call:</Form.Label>
-                                <Col sm={9} className="d-flex align-items-center">
-                                    <Form.Check inline label="Home" type="radio" value="home"
-                                        {...register("prefContact")} />
-                                    <Form.Check inline label="Mother's Cell" type="radio" value="cell1"
-                                        {...register("prefContact")} />
-                                    <Form.Check inline label="Father's Cell" type="radio" value="cell2"
-                                        {...register("prefContact")} />
-                                </Col>
-                            </Form.Group>
-                            <Row className="mb-2">
-                                <Col md={6}><Form.Group><Form.Label>Address</Form.Label><Form.Control type="text" {...register("addr1")} /></Form.Group></Col>
-                                <Col md={6}><Form.Group><Form.Label>Address (cont)</Form.Label><Form.Control type="text" {...register("addr2")} /></Form.Group></Col>
-                            </Row>
-                            <Row className="mb-3">
-                                <Col md={5}><Form.Group><Form.Label>City <Required /></Form.Label>
-                                    <Form.Control type="text" isInvalid={!!errors.city} {...register("city", { required: "City is required" })} />
-                                    <Form.Control.Feedback type="invalid">{errors.city?.message}</Form.Control.Feedback>
-                                </Form.Group></Col>
-                                <Col md={4}>
-                                    <Form.Group>
-                                        <Form.Label>State</Form.Label>
-                                        <Form.Select {...register("state")}>
-                                            <option value="NJ">New Jersey</option>
-                                            <option value="NY">New York</option>
-                                        </Form.Select>
-                                    </Form.Group>
-                                </Col>
-                                <Col md={3}><Form.Group><Form.Label>Zip Code</Form.Label><Form.Control type="text" {...register("zip")} /></Form.Group></Col>
-                            </Row>
-                            <Row className="mb-3">
-                                <Col md={6}><Form.Group><Form.Label>Emergency Contact Name</Form.Label><Form.Control type="text" {...register("ecn")} /></Form.Group></Col>
-                                <Col md={6}><Form.Group><Form.Label>Emergency Contact Phone</Form.Label><Form.Control type="text" {...register("ecp")} /></Form.Group></Col>
-                            </Row>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Additional Comments</Form.Label>
-                                <Form.Control type="text" {...register("comments")} />
-                                <Form.Text className="text-muted">No teammate requests accepted.</Form.Text>
-                            </Form.Group>
+                                </>
+                            )}
+                            {/* --- THIS IS THE END OF THE CHANGE --- */}
                         </Card.Body>
                     </Card>
 
@@ -381,7 +374,6 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                     <Card className="mb-4">
                         <Card.Header className="bg-info text-white">Player Information</Card.Header>
                         <Card.Body>
-                            {/* 3. REVERT TO CONTROLLER FOR DROPDOWN */}
                             <Form.Group as={Row} className="mb-4 align-items-center">
                                 <Form.Label column sm={4} md={3} className="fw-bold fs-5">
                                     Players for upcoming season:
@@ -421,7 +413,6 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
 
                                                                 if (targetInput) {
                                                                     targetInput.focus();
-                                                                    // 4. ADD SCROLLINTOVIEW
                                                                     targetInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                                                 }
                                                             }
