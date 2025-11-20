@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Row, Col, Card } from 'react-bootstrap';
 // 1. Import RHF hooks for use in this component
 import { useWatch, Controller } from 'react-hook-form';
@@ -21,6 +21,17 @@ const PlayerForm = ({
     const selectedGender = watch(`players.${index}.gender`);
     const selectedSchool = watch(`players.${index}.school`);
     const isNewPlayer = watch(`players.${index}.isNewPlayer`);
+
+    useEffect(() => {
+        if (isNewPlayer) {
+            // Programmatically set wantsBag to '0' (No) when the New Player checkbox is checked.
+            // This prevents charging the fee, even if 'Yes' was selected moments before.
+            setValue(`players.${index}.wantsBag`, '0', {
+                shouldValidate: true,
+                shouldDirty: true
+            });
+        }
+    }, [isNewPlayer, index, setValue]);
 
     // --- DERIVED STATE ---
     const availableGrades = leagueStatus.grades[selectedGender] || [];
@@ -233,7 +244,11 @@ const PlayerForm = ({
                                     disabled={isLocked} 
                                     {...register(`players.${index}.growth`)}
                                 />
+                                      <Form.Text id="growth-help-text" muted>
+                                                    What can YYL do to help your child grow?
+                                       </Form.Text>
                             </Col>
+
                         </Form.Group>
 
                         {/* Row 5: New Player / Bag Logic */}
