@@ -179,9 +179,11 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
         );
     }
 
+
     if (step === 'register') {
         return (
             <Container className="py-4" style={{ maxWidth: '900px' }}>
+                <LeagueStatus text={serverStatusData} />
                 <Form noValidate onSubmit={handleSubmit(onSubmit, onError)} ref={formRef}>
 
                     {submitError && <Alert variant="danger">{submitError}</Alert>}
@@ -370,7 +372,6 @@ const RegistrationForm = ({ serverStatusData = "", requiredPasscode = "", costPe
                         </Card.Body>
                     </Card>
 
-                    <LeagueStatus text={serverStatusData} />
                     <Card className="mb-4">
                         <Card.Header className="bg-info text-white">Player Information</Card.Header>
                         <Card.Body>
